@@ -10,7 +10,7 @@ const StyledBanner = styled.div`
 
   height: 507px;
   background-image: url(${BannerImg});
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   box-shadow: inset 0px 8px 28px -15px #2271D1;
   `;
