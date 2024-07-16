@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import Header from '../Header/Header';
 
 const StyledForm = styled.form`
   display: flex;
@@ -41,11 +40,46 @@ const StyledForm = styled.form`
     border: solid #ffffff36;
     border-width: 1px 0px 1px 0px;
   }
+  .agregar-video {
+    padding: 0 2rem;
+    height: 4rem;
+    margin-right: 1rem;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 800;
+    background-color: #1d87ce;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  .agregar-video:active {
+    transform: scale(0.9);
+  }
+  .limpiar-campos {
+    padding: 0 2rem;
+    height: 4rem;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 800;
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  .limpiar-campos:active {
+    transform: scale(0.9);
+  }
+  #descripcion {
+    display: block;
+  }
 `;
 
 const InputText = styled.input`
   width: 90%;
   height: 3rem;
+  color: #FFFFFF;
   margin-top: 1rem;
   padding: 0 1rem;
   border: 1px solid #00000036;
@@ -102,12 +136,12 @@ const Form = ({ onAddVideo, onEditVideo, currentVideo }) => {
       onEditVideo(id, title, category, urlVideo, photoVideo, description);
     } else {
       onAddVideo(id, title, category, urlVideo, photoVideo, description);
+      clearForm();
     }
   };
 
   return (
     <>
-      <Header />
       <StyledForm onSubmit={handleSubmit}>
         <div className='text-section'>
           <h1 className='tittle'>NUEVO VIDEO</h1>
@@ -173,8 +207,8 @@ const Form = ({ onAddVideo, onEditVideo, currentVideo }) => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </fieldset>
-        <button type="submit">'Agregar Video'</button>
-        <button type="button" onClick={clearForm}>Limpiar Campos</button>
+        <button className='agregar-video' type="submit">Agregar Video</button>
+        <button className='limpiar-campos' type="button" onClick={clearForm}>Limpiar Campos</button>
       </StyledForm>
     </>
   );

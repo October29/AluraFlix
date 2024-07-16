@@ -84,6 +84,11 @@ const Main = ({ categories, videos, removeVideo, onEditVideo }) => {
     setIsEditModalOpen(false);
   };
 
+  const handleEditVideo = async (id, title, category, urlVideo, photoVideo) => {
+    await onEditVideo(id, title, category, urlVideo, photoVideo);
+    handleEditModalClose(); // Cerrar el modal después de la edición
+  };
+
   if (!videos || videos.length === 0) return <div>No videos found</div>;
 
   const handleDelete = (id) => {
@@ -124,7 +129,9 @@ const Main = ({ categories, videos, removeVideo, onEditVideo }) => {
 
       {/* Modal para editar */}
       <Modal isOpen={isEditModalOpen} onClose={handleEditModalClose}>
-        <EditForm currentVideo={currentVideo} onEditVideo={onEditVideo} />
+        {currentVideo && (
+          <EditForm currentVideo={currentVideo} onEditVideo={handleEditVideo} />
+        )}
       </Modal>
     </StyledMain>
   );

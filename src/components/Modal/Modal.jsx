@@ -1,36 +1,50 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FaWindowClose } from "react-icons/fa";
 
-const ModalOverlay = styled.div`
+const shouldForwardProp = (prop) => prop !== 'isOpen';
+
+const ModalWrapper = styled.div.withConfig({ shouldForwardProp })`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
 `;
 
 const ModalContent = styled.div`
-  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #6BD1FF;
   padding: 2rem;
-  border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
+  border-radius: 10px;
+  width: 80%;
+  height: 80%;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
 `;
 
 const Modal = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={e => e.stopPropagation()}>
-        <button onClick={onClose}>Cerrar</button>
+    <ModalWrapper isOpen={isOpen}>
+      <ModalContent>
+        <CloseButton onClick={onClose}> <FaWindowClose></FaWindowClose> </CloseButton>
         {children}
       </ModalContent>
-    </ModalOverlay>
+    </ModalWrapper>
   );
 };
 

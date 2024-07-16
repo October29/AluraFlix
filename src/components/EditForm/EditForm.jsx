@@ -1,165 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
+import { useState } from "react";
+import styled from "styled-components";
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  height: 100vh;
-  padding: 4rem 0 0 0;
-  fieldset {
-    width: 45%;
-    height: 8rem;
-    border: none;
-  }
-  & label {
-    width: 32px;
-    font-weight: bolder;
-    color: #FFFFFF;
-  }
-  .text-section {
-    width: 100%;
-  }
-  .tittle {
+const StyledEditForm = styled.form`
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+  background-color: #2d2d2d;
+  border-radius: 2rem;
+  h2 {
     font-size: 48px;
     font-weight: 900;
-    text-align: center;
     color: #FFFFFF;
   }
-  .description {
+  .campo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 2.5rem 0;
+  }
+  input {
+    width: 70%;
+    height: 3rem;
+    padding: 0 1rem;
+    margin: auto;
+    color: #FFFFFF;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    border: 1px solid #6BD1FF;
+  }
+  label {
     font-size: 20px;
     text-align: center;
+    font-weight: 800;
+    color: #6BD1FF;
+  }
+  button {
+    margin-bottom: 2em;
+    font-size: 32px;
+    font-weight: 900;
+    padding: 1rem 3rem;
+    border-radius: 0.5rem;
     color: #FFFFFF;
-  }
-  .tag {
-
+    background-color: #6BD1FF;
   }
 `;
 
-const InputText = styled.input`
-  width: 90%;
-  height: 3rem;
-  margin-top: 1rem;
-  padding: 0 1rem;
-  border: 1px solid #00000036;
-  border-radius: 0.5rem;
-  font-weight: 800;
-  background-color: transparent;
-`;
-
-const TextArea = styled.textarea`
-  width: 90%;
-  height: 6rem;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid #00000036;
-  border-radius: 0.5rem;
-  font-weight: 800;
-  background-color: transparent;
-  resize: none;
-`;
-
-const EditForm = ({ currentVideo, onEditVideo }) => {
-  const [id, setId] = useState('');
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [urlVideo, setUrlVideo] = useState('');
-  const [photoVideo, setPhotoVideo] = useState('');
-  const [description, setDescription] = useState('');
-
-  useEffect(() => {
-    if (currentVideo) {
-      setId(currentVideo.id || ''); // Manejar valores nulos o undefined
-      setTitle(currentVideo.titleVideo || '');
-      setCategory(currentVideo.categoryVideo || '');
-      setUrlVideo(currentVideo.urlVideo || '');
-      setPhotoVideo(currentVideo.photoVideo || '');
-      setDescription(currentVideo.description || '');
-    } else {
-      clearForm();
-    }
-  }, [currentVideo]);
-
-  const clearForm = () => {
-    setId(uuidv4()); // Generar un nuevo ID en el caso de un nuevo video
-    setTitle('');
-    setCategory('');
-    setUrlVideo('');
-    setPhotoVideo('');
-    setDescription('');
-  };
+function EditForm({ currentVideo, onEditVideo }) {
+  const [title, setTitle] = useState(currentVideo.titleVideo);
+  const [category, setCategory] = useState(currentVideo.categoryVideo);
+  const [urlVideo, setUrlVideo] = useState(currentVideo.urlVideo);
+  const [photoVideo, setPhotoVideo] = useState(currentVideo.photoVideo);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onEditVideo(id, title, category, urlVideo, photoVideo, description);
-    clearForm(); // Limpiar el formulario después de enviar
+    onEditVideo(currentVideo.id, title, category, urlVideo, photoVideo);
   };
 
   return (
-    <StyledForm onSubmit={handleSubmit}>
-      <fieldset>
-        <label htmlFor="titulo">Titulo</label>
-        <InputText
-          required
-          id="titulo"
-          name="titulo"
-          type="text"
-          placeholder="Ingrese título"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="categoria">Categoría</label>
-        <InputText
-          required
-          id="categoria"
-          name="categoria"
-          type="text"
-          placeholder="Ingrese categoría"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="video">Video</label>
-        <InputText
-          required
-          id="video"
-          name="video"
-          type="text"
-          placeholder="Ingrese la URL del video"
-          value={urlVideo}
-          onChange={(e) => setUrlVideo(e.target.value)}
-        />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="imagen">Imagen</label>
-        <InputText
-          required
-          id="imagen"
-          name="imagen"
-          type="text"
-          placeholder="Ingrese URL de la imagen"
-          value={photoVideo}
-          onChange={(e) => setPhotoVideo(e.target.value)}
-        />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="descripcion">Descripción</label>
-        <TextArea
-          id="descripcion"
-          name="descripcion"
-          placeholder="Ingrese la descripción del video"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </fieldset>
-      <button type="submit" >Editar Video</button>
-      <button type="button" onClick={clearForm}>Limpiar Campos</button>
-    </StyledForm>
+    <StyledEditForm onSubmit={handleSubmit}>
+      <h2>EDITAR CARD</h2>
+      <div className="campo">
+        <label>
+          Titulo:
+          </label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Ingrese nombre"
+          />
+      </div>
+      <div className="campo">
+        <label>
+          Categoria:
+          </label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Ingrese categoria"
+          />
+      </div>
+      <div className="campo">
+        <label>
+          URL Video:
+          </label>
+          <input
+            type="text"
+            value={urlVideo}
+            onChange={(e) => setUrlVideo(e.target.value)}
+            placeholder="Ingrese URL del video"
+          />
+      </div>
+      <div className="campo">
+        <label>
+          Imagen Video:
+          </label>
+          <input
+            type="text"
+            value={photoVideo}
+            onChange={(e) => setPhotoVideo(e.target.value)}
+            placeholder="Ingrese URL de la imagen del video"
+          />
+      </div>
+      <button type="submit">Editar video</button>
+    </StyledEditForm>
   );
-};
+}
 
 export default EditForm;

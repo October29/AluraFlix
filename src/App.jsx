@@ -6,17 +6,18 @@ import GlobalStyles from "./components/GlobalStyles/GlobalStyles";
 import Header from "./components/Header/Header";
 import Banner from "./components/Banner/Banner";
 import Main from "./components/Main/Main";
-import AddVideoPage from "./components/AddVideoPage";
+import Form from "./components/Form/Form";
 import Modal from "./components/Modal/Modal"; 
-import Form from "./components/Form/Form"; 
 import EditForm from "./components/EditForm/EditForm"; 
-import { v4 as uuidv4 } from 'uuid';
 
 const AppContainer = styled.main`
   background-color: #262626;
+  height: 100%;
 `;
 
 function App() {
+  console.log("control01: App() activa");
+
   const [categories, setCategories] = useState([]);
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
@@ -24,25 +25,32 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadCategories = async () => {
       try {
-        const categoriesData = await listCategories();
-        setCategories(categoriesData);
-        
-        const videosData = await listVideos();
-        setVideos(videosData);
+        const categories = await listCategories();
+        setCategories(categories);
       } catch (error) {
         setError(error.message);
       }
     };
 
-    fetchData();
+    const loadVideos = async () => {
+      try {
+        const videos = await listVideos();
+        setVideos(videos);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    loadCategories();
+    loadVideos();
   }, []);
 
   const handleAddVideo = async (id, title, category, urlVideo, photoVideo) => {
     try {
       const newVideo = await addVideo(id, title, category, urlVideo, photoVideo);
-      setVideos(prevVideos => [...prevVideos, newVideo]);
+      setVideos((prevVideos) => [...prevVideos, newVideo]);
     } catch (error) {
       setError(error.message);
     }
@@ -50,64 +58,67 @@ function App() {
 
   const handleEditVideo = async (id, title, category, urlVideo, photoVideo) => {
     try {
-      console.log('Editing Video:', { id, title, category, urlVideo, photoVideo }); // Verifica los datos antes de enviar
-      await updateVideo(id, title, category, urlVideo, photoVideo);
-      const updatedVideos = videos.map(video =>
-        video.id === id ? { ...video, titleVideo: title, categoryVideo: category, urlVideo: urlVideo, photoVideo: photoVideo } : video
+      const updatedVideo = await updateVideo(id, title, category, urlVideo, photoVideo);
+      setVideos((prevVideos) =>
+        prevVideos.map((video) => (video.id === id ? updatedVideo : video))
       );
-      setVideos(updatedVideos);
-      setCurrentVideo(null);
-      closeModal(); // Asegura que se cierre el modal después de la edición
     } catch (error) {
-      console.error('Error updating video:', error);
+      console.error('Error editing video:', error);
     }
   };
 
   const removeVideo = async (id) => {
     try {
       await deleteVideo(id);
-      const updatedVideos = videos.filter(video => video.id !== id);
-      setVideos(updatedVideos);
+      setVideos((prevVideos) => prevVideos.filter((video) => video.id !== id));
     } catch (error) {
-      setError(error.message);
+      console.error('Error removing video:', error);
     }
   };
 
-  const openDialog = (video = null) => {
+  const handleModalOpen = (video) => {
     setCurrentVideo(video);
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const handleModalClose = () => {
     setCurrentVideo(null);
     setIsModalOpen(false);
   };
 
   return (
     <Router>
+      <GlobalStyles />
       <AppContainer>
-        <GlobalStyles />
+        <Header />
         <Routes>
           <Route path="/" element={
             <>
-              <Header />
               <Banner />
-              <Main categories={categories} videos={videos} removeVideo={removeVideo} onEditVideo={openDialog} />
+              <Main 
+                categories={categories}
+                videos={videos}
+                removeVideo={removeVideo}
+                onEditVideo={handleEditVideo} 
+              />
             </>
           } />
           <Route path="/crear-video" element={
-            <Form onAddVideo={handleAddVideo} />
+            <Form 
+              onAddVideo={handleAddVideo} 
+            />
           } />
         </Routes>
-
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          {currentVideo ? (
-            <EditForm currentVideo={currentVideo} onEditVideo={handleEditVideo} />
-          ) : (
-            <Form onAddVideo={handleAddVideo} />
-          )}
-        </Modal>
       </AppContainer>
+      {/* Modal para editar */}
+      <Modal isOpen={isModalOpen} onClose={handleModalClose}>
+        {currentVideo && (
+          <EditForm 
+            currentVideo={currentVideo} 
+            onEditVideo={handleEditVideo} 
+          />
+        )}
+      </Modal>
     </Router>
   );
 }

@@ -17,10 +17,10 @@ const StyledCardContainer = styled.div`
   }
 
   img {
-    width: 100%; /* Ajustado para ocupar el ancho completo del contenedor */
-    height: auto; /* Ajusta la altura proporcionalmente */
-    max-height: 260px; /* Limita la altura máxima para evitar distorsiones */
-    object-fit: cover; /* Asegura que la imagen cubra el área asignada */
+    width: 100%; 
+    height: auto; 
+    max-height: 260px; 
+    object-fit: cover; 
   }
 
   h5 {

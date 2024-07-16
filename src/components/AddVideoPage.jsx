@@ -32,7 +32,6 @@ const TitleSection = styled.div`
 const AddVideoPage = ({ onAddVideo, onEditVideo, currentVideo }) => {
   return (
     <>
-      <Header />
       <PageContainer>
         <TitleSection>
           <h1>Nuevo video</h1>

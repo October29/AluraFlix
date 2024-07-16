@@ -11,6 +11,7 @@ html {
   body {
     margin: 0;
     min-height: 100vh;
+    background-color: #262626;
   }
   main {
     display: block;
