@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const StyledEditForm = styled.form`
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   background-color: #2d2d2d;
   border-radius: 2rem;
   h2 {
@@ -46,10 +46,19 @@ justify-content: center;
 `;
 
 function EditForm({ currentVideo, onEditVideo }) {
-  const [title, setTitle] = useState(currentVideo.titleVideo);
-  const [category, setCategory] = useState(currentVideo.categoryVideo);
-  const [urlVideo, setUrlVideo] = useState(currentVideo.urlVideo);
-  const [photoVideo, setPhotoVideo] = useState(currentVideo.photoVideo);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [urlVideo, setUrlVideo] = useState('');
+  const [photoVideo, setPhotoVideo] = useState('');
+
+  useEffect(() => {
+    if (currentVideo) {
+      setTitle(currentVideo.titleVideo);
+      setCategory(currentVideo.categoryVideo.toLowerCase());
+      setUrlVideo(currentVideo.urlVideo);
+      setPhotoVideo(currentVideo.photoVideo);
+    }
+  }, [currentVideo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,46 +71,46 @@ function EditForm({ currentVideo, onEditVideo }) {
       <div className="campo">
         <label>
           Titulo:
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ingrese nombre"
-          />
+        </label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ingrese nombre"
+        />
       </div>
       <div className="campo">
         <label>
           Categoria:
-          </label>
-          <input
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="Ingrese categoria"
-          />
+        </label>
+        <input
+          type="text"
+          value={category}
+          onChange={(e) => setCategory(e.target.value.toLowerCase())}
+          placeholder="Ingrese categoria"
+        />
       </div>
       <div className="campo">
         <label>
           URL Video:
-          </label>
-          <input
-            type="text"
-            value={urlVideo}
-            onChange={(e) => setUrlVideo(e.target.value)}
-            placeholder="Ingrese URL del video"
-          />
+        </label>
+        <input
+          type="text"
+          value={urlVideo}
+          onChange={(e) => setUrlVideo(e.target.value)}
+          placeholder="Ingrese URL del video"
+        />
       </div>
       <div className="campo">
         <label>
           Imagen Video:
-          </label>
-          <input
-            type="text"
-            value={photoVideo}
-            onChange={(e) => setPhotoVideo(e.target.value)}
-            placeholder="Ingrese URL de la imagen del video"
-          />
+        </label>
+        <input
+          type="text"
+          value={photoVideo}
+          onChange={(e) => setPhotoVideo(e.target.value)}
+          placeholder="Ingrese URL de la imagen del video"
+        />
       </div>
       <button type="submit">Editar video</button>
     </StyledEditForm>
